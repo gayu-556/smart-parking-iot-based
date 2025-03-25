@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #f39c12, #8e44ad);
+            background-size: 200% 200%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .active {
+            display: flex;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.7);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(to right, #0033cc, #00aaff);
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateZ(10px) scale(1.1);
+        }
+
+        .parking-lot {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            width: 90%;
+        }
+
+        .slot {
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+            background: rgba(0, 255, 0, 0.7);
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .slot:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 1);
+        }
+
+        #successMessage {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: #00ff00;
+        }
+
+        select {
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div id="welcome" class="container active">
+        <div class="box">
+            <h1>🚗 Welcome to Smart Parking</h1>
+            <p>Your ultimate parking solution is here!</p>
+            <p><strong>🌟 Book slots with ease, view real-time availability, and park smarter. 🌟</strong></p>
+            <div class="content">
+                <h2>Why Choose Smart Parking?</h2>
+                <p>✅ Hassle-Free Parking Management</p>
+                <p>✅ Save Time and Effort</p>
+                <p>✅ Real-Time Slot Updates</p>
+            </div>
+            <div class="content" style="margin-top: 20px;">
+                <h2>Top Features:</h2>
+                <p>🚀 Book or Free Slots Instantly</p>
+                <p>🌍 Eco-Friendly and Fuel Efficient</p>
+                <p>🔑 Easy-to-Use Interface</p>
+            </div>
+            <div style="margin-top: 20px;">
+                <h2>Did You Know?</h2>
+                <p>Smart parking can reduce search time by <strong>30%</strong> and cut fuel usage significantly!</p>
+            </div>
+            <button class="btn" onclick="navigate('booking')">Get Started</button>
+        </div>
+    </div>
+
+    <!-- Booking Page -->
+    <div id="booking" class="container">
+        <div class="box">
+            <h2>Book Your Slot</h2>
+            <p>Select a slot and action to book or free your desired parking spot.</p>
+            <select id="parkingSlot">
+                <option value="1">Parking Slot 1</option>
+                <option value="2">Parking Slot 2</option>
+                <option value="3">Parking Slot 3</option>
+                <option value="4">Parking Slot 4</option>
+                <option value="5">Parking Slot 5</option>
+            </select>
+            <select id="slotAction">
+                <option value="book">Book Slot</option>
+                <option value="free">Free Slot</option>
+            </select>
+            <button class="btn" onclick="handleSlot()">Submit</button>
+            <button class="btn" onclick="navigate('welcome')">Back to Welcome</button>
+            <button class="btn" onclick="navigate('slotStatus')">View Parking Slot Status</button>
+            <div id="successMessage"></div>
+        </div>
+        <div id="availableSlots">
+            <h3>Available Slots:</h3>
+            <div id="slotInfo"></div>
+        </div>
+    </div>
+
+    <!-- Parking Slots Status Page -->
+    <div id="slotStatus" class="container">
+        <div class="box">
+            <h2>Parking Slots Status</h2>
+            <p>Here is the real-time status of all parking slots:</p>
+        </div>
+        <div class="parking-lot">
+            <div id="slot1" class="slot">Slot 1 - Free</div>
+            <div id="slot2" class="slot">Slot 2 - Free</div>
+            <div id="slot3" class="slot">Slot 3 - Free</div>
+            <div id="slot4" class="slot">Slot 4 - Free</div>
+            <div id="slot5" class="slot">Slot 5 - Free</div>
+        </div>
+        <button class="btn" onclick="navigate('booking')">Back to Booking</button>
+    </div>
+
+    <script>
+        function navigate(sectionId) {
+            document.querySelectorAll('.container').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            if (sectionId === 'booking') updateAvailableSlots();
+        }
+
+        function handleSlot() {
+            const slotId = document.getElementById('parkingSlot').value;
+            const action = document.getElementById('slotAction').value;
+            const slotElement = document.getElementById(`slot${slotId}`);
+            const successMessage = document.getElementById('successMessage');
+
+            if (action === 'book') {
+                if (!slotElement.textContent.includes('Occupied')) {
+                    slotElement.textContent = `Slot ${slotId} - Occupied`;
+                    slotElement.style.backgroundColor = 'rgba(255, 0, 0, 0.7)';
+                    successMessage.textContent = `Slot ${slotId} successfully booked!`;
+                } else {
+                    successMessage.textContent = `Slot ${slotId} is already occupied!`;
+                }
+            } else if (action === 'free') {
+                if (!slotElement.textContent.includes('Free')) {
+                    slotElement.textContent = `Slot ${slotId} - Free`;
+                    slotElement.style.backgroundColor = 'rgba(0, 255, 0, 0.7)';
+                    successMessage.textContent = `Slot ${slotId} is now free!`;
+                } else {
+                    successMessage.textContent = `Slot ${slotId} is already free!`;
+                }
+            }
+            updateAvailableSlots();
+        }
+
+        function updateAvailableSlots() {
+            const slots = document.querySelectorAll('.slot');
+            const slotInfo = document.getElementById('slotInfo');
+            slotInfo.innerHTML = '';
+            slots.forEach(slot => {
+                if (slot.textContent.includes('Free')) {
+                    const slotText = document.createElement('div');
+                    slotText.textContent = slot.textContent;
+                    slotInfo.appendChild(slotText);
+                }
+            });
+        }
+    </script>
